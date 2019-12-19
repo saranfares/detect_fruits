@@ -13,41 +13,24 @@ from utils.read_weights import ReadWeights
 from utils.util_extras import *
 from utils.read_image_data import read_image_data
 
-def run_model():
-    weights_path = args.weights
-    image_path   = args.image
-
-    # set some parameters
-    net_h, net_w = 416, 416
-    obj_thresh, nms_thresh = 0.5, 0.45
-
-    # anchors in the image, this will provide us with the places of convolution
-    anchors = [[116,90,  156,198,  373,326],  
-                [30,61, 62,45,  59,119], 
-                [10,13,  16,30,  33,23]]
-
-    # possible classes in our dataset
-    labels = ["apple", "banana", "orange"]
-
-    # make the yolov3 model to predict 80 classes on COCO
-    yolov3 = make_yolov3_model()
-
-    # load the weights trained on COCO into the model
-    weight_reader = WeightReader(weights_path)
-    weight_reader.load_weights(yolov3)
-
-    # preprocess the image
-    image = cv2.imread(image_path)
-    image_h, image_w, _ = image.shape
-    new_image = preprocess_input(image, net_h, net_w)
-
-    # run the prediction
-    yolos = yolov3.predict(new_image)
-    boxes = []
-
-    for i in range(len(yolos)):
-        # decode the output of the network
-        boxes += decode_netout(yolos[i][0], anchors[i], obj_thresh, nms_thresh, net_h, net_w)
+def run_model(input_shape, output):
+    pass;
+    """
+    model= Sequential()
+    model.add(Conv2D(kernel_size=(3,3), filters=32, activation='tanh', input_shape=input_shape, use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.01, l2=0.01)))
+    model.add(MaxPool2D(pool_size=(2,2)))
+    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh'))
+    model.add(MaxPool2D(pool_size=(3,3)))
+    
+    model.add(Flatten())
+    
+    model.add(Dense(units=32, activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=output, activation='softmax'))
+    
+    model.compile(loss='categorical_crossentropy', metrics=['acc'], optimizer='adam')
+    
+    return model
 
     # correct the sizes of the bounding boxes
     correct_yolo_boxes(boxes, image_h, image_w, net_h, net_w)
@@ -60,3 +43,5 @@ def run_model():
  
     # write the image with bounding boxes to file
     cv2.imwrite(image_path[:-4] + '_detected' + image_path[-4:], (image).astype('uint8')) 
+    """
+    
