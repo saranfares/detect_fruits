@@ -14,11 +14,12 @@ def test_model(model, names, images, boxes, labels):
     print("testing on a few images... the image along with output from the model will be shown. ")
     labs = []
     for idx in range(0,len(images)):
-        shape = (1,128,128,1)
+        shape = (1,128,128,3)
         img = np.array(images[idx])
         img = np.reshape(img, shape)
         lab = model.predict_classes(img)
-        print(lab[0])
+        
         labs.append(labels_strings[lab[0]])
 
+    print(labs)
     return labs

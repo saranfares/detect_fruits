@@ -24,6 +24,7 @@ WHITE = 255
 TRAIN_IMG_PATH = "pictures/train"
 TEST_IMG_PATH = "pictures/test"
 
+
 INDICES = {"banana":0, "orange":1, "apple":2, "mixed":3}
 LAB_MULT = [0,0,0,1]
 
@@ -48,11 +49,11 @@ def read_image_data(path, current_type, desired_shape):
             xml_file = path + "/" + img_name + XML_EXT
             img_file = path + "/" + img_name + JPG_EXT
             # read in image
-            img_og = io.imread(img_file,as_gray=True)
+            img_og = io.imread(img_file)
             img = cv2.resize(img_og,shape)
             img = img.astype('float32')
             #img /= 255.0
-            images.append(img)
+            images.append(img[:,:,0:3])
             shape_old = img_og.shape
             # read in location on the image
             img_info = ET.parse(xml_file)
@@ -84,13 +85,13 @@ def read_image_data(path, current_type, desired_shape):
                 bx = convert_to_yolo(shape_old, float(x1), float(y1), float(x2), float(y2))
                 bx_l.append(bx)
             if sum(lab) is not 1:
-                lab = LAB_MULT
+                lab[3] = 1
             labels_list.append(lab)
             boxes_list.append(bx_l)
             img_names.append(img_name)
 
     print("Done working on the", current_type, "image set\n")
-    return(img_names, np.array(images), boxes_list, labels_list)
+    return(img_names, images, boxes_list, labels_list)
 
 """"
 !!!! EXAMPLE OF XML FILE !!!!

@@ -8,13 +8,13 @@ from utils.show_images import show_images
 OUTPUT_PATH = "pictures/output/"
 INPUT_TRAIN = "pictures/train/"
 INPUT_TEST = "pictures/test/"
-LIMIT = 8
-IMG_SHAPE = (128,128,1)
+LIMIT = 10
+IMG_SHAPE = (128,128,3)
 
 def main(print_imgs, boxes):
     # run run_model 
     input_shape = IMG_SHAPE
-    labels = ["apple", "banana", "orange", "multiple"]
+    labels = ["banana", "orange", "apple", "mixed"]
     output_sz = len(labels)
 
     result_labels = run_model(INPUT_TRAIN, INPUT_TEST, OUTPUT_PATH, input_shape, output_sz)
