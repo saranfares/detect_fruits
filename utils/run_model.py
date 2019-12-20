@@ -1,37 +1,59 @@
 import argparse
 import os
 import numpy as np
-from keras.layers import Conv2D, Input, BatchNormalization, LeakyReLU, ZeroPadding2D, UpSampling2D
-from keras.layers.merge import add, concatenate
-from keras.models import Model
 import struct
 import cv2
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import keras as kr
 
 # my classes + functions
 from utils.bounding_box import BoundingBox
-from utils.read_weights import ReadWeights
 from utils.util_extras import *
 from utils.read_image_data import read_image_data
+from utils.create_model import create_model
+from utils.train_model import train_model
+from utils.test_model import test_model
 
-def run_model(input_shape, output):
-    pass;
+model_name = "conv_net.h5"
+
+def run_model(train_path, test_path, output_path, input_shape, output):
+    # create model
+    try:
+        print("attempting to load the pre-trained model into memory")
+        trained_model = kr.models.load_model(model_name)
+        print("loaded the pre-trained model into memory")
+
+    except:
+        print("unable to find pre-trained model...")
+        print("now, building the model from scratch")
+        num_classes = 3
+        #anchors = [[30,61, 62,45, 59,119], [10,13, 16,30, 33,23]]
+
+        model = create_model(input_shape, output, [], num_classes)
+
+        # load image sets
+        print("loading training images into memory")
+        train_image_names, train_images, train_boxes, train_labels = read_image_data(train_path, "training", input_shape)
+
+        # train the model
+        trained_model = train_model(model, train_image_names, train_images, train_boxes, train_labels)
+
+        # save the model
+        print("save model")
+        trained_model.save(model_name)
+
+    # run the model on unseen input (from test set)
+    print("loading test images into memory")
+    test_image_names, test_images, test_boxes, test_labels = read_image_data(test_path, "test", input_shape)   
+
+    # test the model
+    print("running model on unseen images")
+    result_labels = test_model(trained_model, test_image_names, test_images, test_boxes, test_labels)
+    return result_labels
+    #print("done testing. images can be found in ", output_path)
+
     """
-    model= Sequential()
-    model.add(Conv2D(kernel_size=(3,3), filters=32, activation='tanh', input_shape=input_shape, use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.01, l2=0.01)))
-    model.add(MaxPool2D(pool_size=(2,2)))
-    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh'))
-    model.add(MaxPool2D(pool_size=(3,3)))
-    
-    model.add(Flatten())
-    
-    model.add(Dense(units=32, activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(Dense(units=output, activation='softmax'))
-    
-    model.compile(loss='categorical_crossentropy', metrics=['acc'], optimizer='adam')
-    
-    return model
-
     # correct the sizes of the bounding boxes
     correct_yolo_boxes(boxes, image_h, image_w, net_h, net_w)
 
@@ -44,4 +66,3 @@ def run_model(input_shape, output):
     # write the image with bounding boxes to file
     cv2.imwrite(image_path[:-4] + '_detected' + image_path[-4:], (image).astype('uint8')) 
     """
-    

@@ -9,7 +9,7 @@ import skimage.io as io
 ROWS = 1
 COLS = 2
 
-def show_images(input_path, output_path, limit):
+def show_images(input_path, output_path, labels, limit, boxes):
     print("showing images")
     names = os.listdir(input_path)
     img_names = set()
@@ -24,6 +24,7 @@ def show_images(input_path, output_path, limit):
 
     count = 1
     for img_name in img_names:
+        lab = labels[count-1]
         print(img_name)
         # find test image original
         og_f = input_path + img_name + '.jpg'
@@ -35,20 +36,29 @@ def show_images(input_path, output_path, limit):
             label = "multiple fruits"
 
         img_og = io.imread(og_f)
-        img_boxes = io.imread(w_boxes_f)
 
-        # display side-by-side
-        plt.subplot(ROWS, COLS, 1)
-        plt.imshow(img_og, cmap=plt.cm.gray)
-        plt.title("Test Image")
-        plt.xticks([])
-        plt.yticks([])
+        
 
-        plt.subplot(ROWS, COLS, 2)
-        plt.imshow(img_boxes, cmap=plt.cm.gray)
-        plt.title("Boxed + Labeled Test Image")
-        plt.xticks([])
-        plt.yticks([])
+        if boxes:
+            # display side-by-side
+            plt.subplot(ROWS, COLS, 1)
+            plt.imshow(img_og, cmap=plt.cm.gray)
+            plt.title("Test Image")
+            plt.xticks([])
+            plt.yticks([])
+
+            img_boxes = io.imread(w_boxes_f)
+            plt.subplot(ROWS, COLS, 2)
+            plt.imshow(img_boxes, cmap=plt.cm.gray)
+            plt.title("Boxed + Labeled Test Image")
+            plt.xticks([])
+            plt.yticks([])
+        else:
+            plt.imshow(img_og, cmap=plt.cm.gray)
+            plt.title("Image was labeled as "+ lab)
+            plt.xticks([])
+            plt.yticks([])
+
 
         plt.show()
         io.show()
