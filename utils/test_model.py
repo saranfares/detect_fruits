@@ -18,7 +18,7 @@ def test_model(model, names, images, boxes, labels):
         img = np.array(images[idx])
         img = np.reshape(img, shape)
         lab = model.predict_classes(img)
-        
+        print(lab)
         labs.append(labels_strings[lab[0]])
 
     print(labs)

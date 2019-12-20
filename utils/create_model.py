@@ -10,17 +10,9 @@ from utils.util_extras import convolve_block_creator
 
 def create_model(input_shape, output, anchors, num_classes):
     model= Sequential()
-    model.add(Conv2D(kernel_size=(3,3), filters=32, activation='tanh', input_shape=input_shape, use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.001, l2=0.002)))
+    model.add(Conv2D(kernel_size=(3,3), filters=32, activation='tanh', input_shape=input_shape, use_bias=False, kernel_regularizer=ks.regularizers.l1_l2(l1=0.01, l2=0.02)))
     model.add(MaxPool2D(pool_size=(2,2)))
-
-    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh',use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.001, l2=0.002)))
-    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh',use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.001, l2=0.002)))
-    model.add(MaxPool2D(pool_size=(3,3)))
-
-    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh',use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.001, l2=0.002)))
-    model.add(MaxPool2D(pool_size=(3,3)))
-
-    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh',use_bias=True, kernel_regularizer=ks.regularizers.l1_l2(l1=0.001, l2=0.002)))
+    model.add(Conv2D(kernel_size=(3,3), filters=64, activation='tanh',use_bias=False))
     model.add(MaxPool2D(pool_size=(3,3)))
 
     model.add(Flatten())
@@ -28,7 +20,7 @@ def create_model(input_shape, output, anchors, num_classes):
     model.add(Dense(units=32, activation='relu'))
     model.add(Dropout(0.2))
     model.add(Dense(units=output, activation='softmax'))
-    
+
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
     model.summary()
 

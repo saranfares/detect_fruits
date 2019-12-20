@@ -16,12 +16,11 @@ def train_model(model_skeleton, names, images, boxes, labels, test_images, test_
     for i in range(0, imgs.shape[0]):
         imgs[i] = np.array(images[i])
 
-
     test_labels = np.array(test_labels)
     test_imgs = np.zeros((len(test_labels),128,128,3))
     for i in range(0, test_imgs.shape[0]):
         test_imgs[i] = np.array(test_images[i])
 
-    tracking_training = model_skeleton.fit(imgs, labels, batch_size=30, epochs=30, validation_data=(test_imgs, test_labels))
+    tracking_training = model_skeleton.fit(imgs, labels, batch_size=30, epochs=20, validation_data=(test_imgs, test_labels))
 
     return model_skeleton

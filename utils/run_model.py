@@ -15,7 +15,7 @@ from utils.create_model import create_model
 from utils.train_model import train_model
 from utils.test_model import test_model
 
-model_name = "test_latest.h5"
+model_name = "original_again.h5"
 
 def run_model(train_path, test_path, output_path, input_shape, output):
     # create model
